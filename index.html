@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✦.   Portfolio  |  limonarbol</title>
+    <title>Carolina Becerra | VFX & Arte</title>
     <style>
+        /* =========================================
+           VARIABLES Y RESETEO BÁSICO
+           ========================================= */
         :root {
-            --bg-lavanda: #dbe4f9;      
-            --hoja-blanca: #fbfbfb;     
-            --borde-foto: #ffffff;      
-            --amarillo-tape: rgba(255, 243, 161, 0.9); 
-            --azul-tape: rgba(188, 227, 255, 0.9);
-            --texto-dark: #2a3b50;
-            --texto-muted: #8fa0b5;
+            --bg-color: #0a0a0c; /* Fondo oscuro para resaltar los videos */
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --accent: #dbe4f9; /* Tu tono lavanda original, pero como acento */
         }
 
         * {
@@ -22,402 +22,286 @@
         }
 
         body {
-            background-color: var(--bg-lavanda);
-            background-image: radial-gradient(rgba(255,255,255,0.5) 2px, transparent 0);
-            background-size: 30px 30px;
-            padding: 4rem 1rem;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
         }
 
-        .notebook-container {
-            position: relative;
-            width: 100%;
-            max-width: 1100px;
-            background-color: var(--hoja-blanca);
-            border-radius: 12px;
-            box-shadow: 
-                0 15px 40px rgba(0, 0, 0, 0.12),
-                -6px 0px 0px #f0f0f0, 
-                6px 0px 0px #f0f0f0;
-            padding: 3rem 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .notebook-container::before {
-            content: '';
-            position: absolute;
-            left: 50%;
+        /* =========================================
+           CONTENEDOR DEL FONDO 3D (THREE.JS)
+           ========================================= */
+        #canvas-container {
+            position: fixed;
             top: 0;
-            bottom: 0;
-            width: 2px;
-            background: rgba(0, 0, 0, 0.05);
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Lo manda al fondo */
+            pointer-events: none; /* Permite dar clic a los elementos de enfrente */
+        }
+
+        /* =========================================
+           ESTRUCTURA PRINCIPAL Y PORTADA (HERO)
+           ========================================= */
+        .main-content {
+            position: relative;
             z-index: 1;
-        }
-
-        .binder-spine {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 24px;
-            background: repeating-linear-gradient(
-                to bottom,
-                #777 0px, #ddd 3px, #fff 6px, #aaa 9px, #666 12px,
-                transparent 12px, transparent 90px
-            );
-            z-index: 10;
-            filter: drop-shadow(4px 2px 5px rgba(0,0,0,0.15));
-        }
-
-        .collage-canvas {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .notebook-row {
-            display: flex;
-            width: 100%;
-            min-height: 300px;
-        }
-
-        .page-left, .page-right {
-            width: 50%;
             padding: 2rem;
-            display: flex;
-            align-items: center;
-            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .page-left { justify-content: flex-end; }
-        .page-right { justify-content: flex-start; }
-
-        /* LOGO ESCALONADO */
-        .brand-logo-staggered {
+        .hero-section {
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            user-select: none;
-            margin-bottom: 2rem;
+            justify-content: center;
+            margin-bottom: 4rem;
         }
 
-        .brand-logo-staggered .word-limon {
-            font-size: 2.5rem;
+        .brand-logo {
+            font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 900;
-            letter-spacing: 2px;
-            color: var(--texto-dark);
-            margin-left: 20px;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin-bottom: 1rem;
         }
 
-        .brand-logo-staggered .word-arbol {
-            font-size: 2.5rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: var(--texto-dark);
-            margin-left: 90px;
-            background: linear-gradient(180deg, transparent 60%, rgba(255, 243, 161, 0.6) 60%);
-            padding-right: 10px;
-            display: inline-block;
+        .brand-logo span {
+            color: var(--text-muted);
+            font-weight: 300;
         }
 
-        .brand-logo-staggered .word-portfolio {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #a2b5cd;
-            text-transform: lowercase;
-            margin-left: 40px;
-            margin-top: 4px;
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
         }
-        .video-card {
-            width: 85%;
-            max-width: 380px;
-            background-color: var(--borde-foto);
-            padding: 12px 12px 35px 12px;
-            box-shadow: 3px 6px 15px rgba(0, 0, 0, 0.08);
-            border-radius: 4px;
+
+        .hero-description {
+            color: var(--text-muted);
+            max-width: 500px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           GALERÍA DE PROYECTOS (GRID CLEAN)
+           ========================================= */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            padding-bottom: 5rem;
+        }
+
+        .project-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
             text-decoration: none;
-            color: var(--texto-dark);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.02);
-            position: relative;
+            transition: transform 0.3s ease;
         }
 
-        .video-card:hover {
-            transform: scale(1.04) rotate(0deg) !important; 
-            box-shadow: 5px 12px 25px rgba(0, 0, 0, 0.15);
-            z-index: 5;
+        .project-card:hover {
+            transform: translateY(-5px);
         }
 
         .video-wrapper {
             width: 100%;
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 16 / 9;
             background-color: #000;
-            border-radius: 2px;
+            border-radius: 4px;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .video-wrapper video, 
-        .video-wrapper iframe {
+        .video-wrapper iframe, .video-wrapper video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
-            border: none;
         }
 
-        .card-meta {
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: var(--texto-muted);
+        .project-info h3 {
+            color: var(--text-main);
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .project-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .project-tags {
+            font-size: 0.75rem;
+            color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             margin-top: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .tape-label {
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%) rotate(-2.5deg);
-            padding: 6px 24px;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-            white-space: nowrap;
-            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.05);
-            z-index: 3;
-            border-left: 3px dashed rgba(0, 0, 0, 0.06);
-            border-right: 3px dashed rgba(0, 0, 0, 0.06);
-        }
-
-        .tape-yellow {
-            background-color: var(--amarillo-tape);
-            color: #61561c;
-        }
-
-        .tape-blue {
-            background-color: var(--azul-tape);
-            color: #2b4661;
-            transform: translateX(-50%) rotate(2deg);
-        }
-
-        .rot-izq-1 { transform: rotate(-2.5deg); }
-        .rot-izq-2 { transform: rotate(-4deg); }
-        .rot-der-1 { transform: rotate(3deg); }
-        .rot-der-2 { transform: rotate(1.5deg); }
-
-        .deco-star {
-            position: absolute;
-            font-size: 1.5rem;
-            color: #bce3ff;
-            user-select: none;
-            opacity: 0.6;
-        }
-
-        @media (max-width: 850px) {
-            .notebook-container::before, .binder-spine { display: none; }
-            .notebook-row { flex-direction: column; min-height: auto; }
-            .page-left, .page-right { width: 100%; justify-content: center; padding: 1.5rem 1rem; }
-            .video-card { width: 100%; max-width: 450px; transform: none !important; margin-bottom: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="notebook-container">
-        
-        <div class="binder-spine"></div>
+    <!-- Contenedor donde Three.js inyectará el canvas -->
+    <div id="canvas-container"></div>
 
-        <div class="collage-canvas">
+    <main class="main-content">
+        <!-- Portada -->
+        <header class="hero-section">
+            <div class="hero-subtitle">Carolina Becerra Macías</div>
+            <h1 class="brand-logo">LIMON<span>ARBOL</span></h1>
+            <p class="hero-description">Dirección de Arte, VFX, Medios Interactivos y Video Mapping.</p>
+        </header>
+
+        <!-- Galería de Proyectos -->
+        <section class="portfolio-grid">
             
-            <div class="notebook-row">
-                <div class="page-left" style="align-items: flex-start; justify-content: flex-start; padding-left: 3rem;">
-                    <div class="brand-logo-staggered">
-                        <span class="word-limon">LIMON</span>
-                        <span class="word-arbol">ARBOL</span>
-                        <span class="word-portfolio">portafolio de Física y Simulación</span>
-                        <span class="word-portfolio">Carolina Becerra Macías</span>
-                    </div>
+            <!-- PROYECTO 1 -->
+            <article class="project-card">
+                <div class="video-wrapper">
+                    <!-- Cambia este link por el de tu video de PALCCO cuando lo subas a YouTube oculto -->
+                    <iframe src="https://www.youtube.com/embed/-JskxXPjqHs?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
-                <div class="page-right">
-                    <div class="deco-star" style="top: 20%; left: 10%; font-size: 2.5rem;">✦</div>
+                <div class="project-info">
+                    <h3>Video Mapping Sinfónico (Star Wars / Vivaldi)</h3>
+                    <p>Diseño y renderizado de secuencias animadas para proyección en vivo en PALCCO.</p>
+                    <div class="project-tags">VFX • Motion Graphics • Live Experience</div>
                 </div>
-            </div>
+            </article>
 
-            <div class="notebook-row">
-                <div class="page-left">
-                    <a href="https://youtu.be/-JskxXPjqHs" target="_blank" class="video-card rot-izq-1">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/-JskxXPjqHs?autoplay=1&mute=1&loop=1&playlist=-JskxXPjqHs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 01</span><span>CBM</span></div>
-                        <div class="tape-label tape-yellow">Caída Libre</div>
-                    </a>
+            <!-- PROYECTO 2 -->
+            <article class="project-card">
+                <div class="video-wrapper">
+                    <!-- Cambia este link por el de tu recorrido UVM -->
+                    <iframe src="https://www.youtube.com/embed/AgxwZ4_pzEw?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
-                <div class="page-right">
-                                        <a href="https://youtu.be/AgxwZ4_pzEw" target="_blank" class="video-card rot-der-1">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/AgxwZ4_pzEw?autoplay=1&mute=1&loop=1&playlist=AgxwZ4_pzEw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                       </div>
-                            <div class="card-meta"><span>SIM 02</span><span>CBM</span></div>
-                        <div class="tape-label tape-blue">Plano Inclinado</div>
-                    </a>
+                <div class="project-info">
+                    <h3>Recorrido Virtual Arquitectónico UVM</h3>
+                    <p>Project Lead. Encargada de dirección, iluminación 3D y postproducción final.</p>
+                    <div class="project-tags">Dirección de Arte • Premiere Pro • Blender</div>
                 </div>
-            </div>
+            </article>
 
-            <div class="notebook-row">
-                <div class="page-left">
-                    <a href="https://youtu.be/xrNYWxaRfRs" target="_blank" class="video-card rot-izq-2">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/xrNYWxaRfRs?autoplay=1&mute=1&loop=1&playlist=xrNYWxaRfRs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 03</span><span>CBM</span></div>
-                        <div class="tape-label tape-blue">Práctica Boliche</div>
-                    </a>
+            <!-- PROYECTO 3 -->
+            <article class="project-card">
+                <div class="video-wrapper">
+                    <!-- Cambia este link por grabaciones de tus nodos en TD -->
+                    <iframe src="https://www.youtube.com/embed/xrNYWxaRfRs?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
-                <div class="page-right">
-                    <a href="https://youtu.be/_F_IALLsmO8" target="_blank" class="video-card rot-der-2">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/_F_IALLsmO8?autoplay=1&mute=1&loop=1&playlist=_F_IALLsmO8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 04</span><span>CBM</span></div>
-                        <div class="tape-label tape-yellow">Constraints</div>
-                    </a>
+                <div class="project-info">
+                    <h3>Visuales Interactivos y Shaders</h3>
+                    <p>Generación de gráficos en tiempo real y setups reactivos por nodos.</p>
+                    <div class="project-tags">TouchDesigner • Nodos • Tiempo Real</div>
                 </div>
-            </div>
+            </article>
 
-            <div class="notebook-row">
-                <div class="page-left">
-                    <a href="https://youtu.be/WZtjdZ9kHTc" target="_blank" class="video-card rot-izq-1">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/WZtjdZ9kHTc?autoplay=1&mute=1&loop=1&playlist=WZtjdZ9kHTc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 05</span><span>CBM</span></div>
-                        <div class="tape-label tape-yellow">Partículas</div>
-                    </a>
+            <!-- PROYECTO 4 -->
+            <article class="project-card">
+                <div class="video-wrapper">
+                    <!-- Cambia este link por tu animación de Jannabi -->
+                    <iframe src="https://www.youtube.com/embed/_F_IALLsmO8?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                 </div>
-                <div class="page-right">
-                    <a href="https://youtu.be/vMWPYX2nGlo" target="_blank" class="video-card rot-der-1">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/vMWPYX2nGlo?autoplay=1&mute=1&loop=1&playlist=vMWPYX2nGlo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 06</span><span>CBM</span></div>
-                        <div class="tape-label tape-blue">Cell Fracture</div>
-                    </a>
+                <div class="project-info">
+                    <h3>Together! - Animación Narrativa</h3>
+                    <p>Ejercicio de animación 2D enfocado en metamorfosis conceptual y timing.</p>
+                    <div class="project-tags">Animación 2D • Storytelling</div>
                 </div>
-            </div>
+            </article>
 
-            <div class="notebook-row">
-                <div class="page-left">
-                    <a href="https://youtu.be/ad2XnUtwiBE" target="_blank" class="video-card rot-izq-2">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/ad2XnUtwiBE?autoplay=1&mute=1&loop=1&playlist=ad2XnUtwiBE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 07</span><span>CBM</span></div>
-                        <div class="tape-label tape-blue">Tela Cloth Bandera</div>
-                    </a>
-                </div>
-                <div class="page-right">
-                    <a href="https://youtu.be/j5fJUZTQYd0" target="_blank" class="video-card rot-der-2">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/j5fJUZTQYd0?autoplay=1&mute=1&loop=1&playlist=j5fJUZTQYd0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 08</span><span>CBM</span></div>
-                        <div class="tape-label tape-yellow">Develación Auto</div>
-                    </a>
-                </div>
-            </div>
+        </section>
+    </main>
 
-            <div class="notebook-row">
-                <div class="page-left">
-                    <a href="https://youtu.be/4CYJlXF2Q88" target="_blank" class="video-card rot-izq-1">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/4CYJlXF2Q88?autoplay=1&mute=1&loop=1&playlist=4CYJlXF2Q88" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 09</span><span>CBM</span></div>
-                        <div class="tape-label tape-yellow">Partículas Turbulencia</div>
-                    </a>
-                </div>
-                <div class="page-right">
-                    <a href="https://youtu.be/vQb202Coqmo" target="_blank" class="video-card rot-der-1">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/vQb202Coqmo?autoplay=1&mute=1&loop=1&playlist=vQb202Coqmo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 10</span><span>CBM</span></div>
-                        <div class="tape-label tape-blue">Práctica Fuego</div>
-                    </a>
-                </div>
-            </div>
+    <!-- =========================================
+         DOCUMENTACIÓN Y SETUP DE THREE.JS
+         ========================================= -->
+    <!-- Importamos la librería de Three.js desde un CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // 1. ESCENA, CÁMARA Y RENDERER
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true }); // alpha:true hace el fondo transparente
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            <div class="notebook-row">
-                <div class="page-left">
-                    <a href="https://youtu.be/2dAFh6gu4-0" target="_blank" class="video-card rot-izq-2">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/2dAFh6gu4-0?autoplay=1&mute=1&loop=1&playlist=2dAFh6gu4-0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 11</span><span>CBM</span></div>
-                        <div class="tape-label tape-blue">Práctica Fluidos</div>
-                    </a>
-                </div>
-                <div class="page-right">
-                    <a href="https://youtu.be/gjn6yqxh12s" target="_blank" class="video-card rot-der-2">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/gjn6yqxh12s?autoplay=1&mute=1&loop=1&playlist=gjn6yqxh12s" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 12</span><span>CBM</span></div>
-                        <div class="tape-label tape-yellow">Lata con Fluidos</div>
-                    </a>
-                </div>
-            </div>
+        // 2. CREACIÓN DE PARTÍCULAS (Reemplazable por tus shaders de TouchDesigner/WebGL luego)
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 700; // Número de partículas
+        
+        // Arreglo para guardar las posiciones XYZ de cada partícula
+        const posArray = new Float32Array(particlesCount * 3);
+        
+        for(let i = 0; i < particlesCount * 3; i++) {
+            // Distribución aleatoria en el espacio (entre -5 y 5)
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        // Material de las partículas
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.005,
+            color: 0xdbe4f9, // Tu color lavanda
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        // Malla de partículas agregada a la escena
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
 
-            <div class="notebook-row">
-                <div class="page-left">
-                    <a href="https://youtu.be/a44C6AwXkVQ" target="_blank" class="video-card rot-izq-1">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/a44C6AwXkVQ?autoplay=1&mute=1&loop=1&playlist=a44C6AwXkVQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 13</span><span>CBM</span></div>
-                        <div class="tape-label tape-yellow">Práctica Columpio</div>
-                    </a>
-                </div>
-                <div class="page-right">
-                    <a href="https://youtu.be/rS6vVGbpURM" target="_blank" class="video-card rot-der-1">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/rS6vVGbpURM?autoplay=1&mute=1&loop=1&playlist=rS6vVGbpURM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 14</span><span>CBM</span></div>
-                        <div class="tape-label tape-blue">Práctica Demolición</div>
-                    </a>
-                </div>
-            </div>
+        camera.position.z = 2;
 
-            <div class="notebook-row">
-                <div class="page-left">
-                    <div class="deco-star" style="bottom: 20%; right: 20%;">✦</div>
-                </div>
-                <div class="page-right">
-                    <a href="https://youtu.be/CkpxQTGemIc" target="_blank" class="video-card rot-der-2">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/CkpxQTGemIc?autoplay=1&mute=1&loop=1&playlist=CkpxQTGemIc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        <div class="card-meta"><span>SIM 15</span><span>CBM</span></div>
-                        <div class="tape-label tape-blue">Práctica Soft Body</div>
-                    </a>
-                </div>
-            </div>
+        // 3. INTERACTIVIDAD BÁSICA CON EL MOUSE
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
 
-        </div>
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        });
 
-    </div>
+        // 4. CICLO DE ANIMACIÓN (Render Loop)
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Rotación constante y suave de las partículas
+            particlesMesh.rotation.y = -elapsedTime * 0.05;
+            particlesMesh.rotation.x = elapsedTime * 0.02;
+
+            // Movimiento reactivo al mouse (efecto parallax)
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+            particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+            particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+
+        // 5. RESPONSIVIDAD (Ajustar si cambia el tamaño de la ventana)
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
