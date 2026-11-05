@@ -1,1 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✦.   Portfolio  |  limonarbol</title>
+    <style>
+        :root {
+            --bg-lavanda: #dbe4f9;      
+            --hoja-blanca: #fbfbfb;     
+            --borde-foto: #ffffff;      
+            --amarillo-tape: rgba(255, 243, 161, 0.9); 
+            --azul-tape: rgba(188, 227, 255, 0.9);
+            --texto-dark: #2a3b50;
+            --texto-muted: #8fa0b5;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-lavanda);
+            background-image: radial-gradient(rgba(255,255,255,0.5) 2px, transparent 0);
+            background-size: 30px 30px;
+            padding: 4rem 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        .notebook-container {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            background-color: var(--hoja-blanca);
+            border-radius: 12px;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.12),
+                -6px 0px 0px #f0f0f0, 
+                6px 0px 0px #f0f0f0;
+            padding: 3rem 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notebook-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(0, 0, 0, 0.05);
+            z-index: 1;
+        }
+
+        .binder-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 24px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #777 0px, #ddd 3px, #fff 6px, #aaa 9px, #666 12px,
+                transparent 12px, transparent 90px
+            );
+            z-index: 10;
+            filter: drop-shadow(4px 2px 5px rgba(0,0,0,0.15));
+        }
+
+        .collage-canvas {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .notebook-row {
+            display: flex;
+            width: 100%;
+            min-height: 300px;
+        }
+
+        .page-left, .page-right {
+            width: 50%;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .page-left { justify-content: flex-end; }
+        .page-right { justify-content: flex-start; }
+
+        /* LOGO ESCALONADO */
+        .brand-logo-staggered {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            user-select: none;
+            margin-bottom: 2rem;
+        }
+
+        .brand-logo-staggered .word-limon {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--texto-dark);
+            margin-left: 20px;
+        }
+
+        .brand-logo-staggered .word-arbol {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--texto-dark);
+            margin-left: 90px;
+            background: linear-gradient(180deg, transparent 60%, rgba(255, 243, 161, 0.6) 60%);
+            padding-right: 10px;
+            display: inline-block;
+        }
+
+        .brand-logo-staggered .word-portfolio {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #a2b5cd;
+            text-transform: lowercase;
+            margin-left: 40px;
+            margin-top: 4px;
+        }
+        .video-card {
+            width: 85%;
+            max-width: 380px;
+            background-color: var(--borde-foto);
+            padding: 12px 12px 35px 12px;
+            box-shadow: 3px 6px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--texto-dark);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: scale(1.04) rotate(0deg) !important; 
+            box-shadow: 5px 12px 25px rgba(0, 0, 0, 0.15);
+            z-index: 5;
+        }
+
+        .video-wrapper {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background-color: #000;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .video-wrapper video, 
+        .video-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border: none;
+        }
+
+        .card-meta {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: var(--texto-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tape-label {
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2.5deg);
+            padding: 6px 24px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.05);
+            z-index: 3;
+            border-left: 3px dashed rgba(0, 0, 0, 0.06);
+            border-right: 3px dashed rgba(0, 0, 0, 0.06);
+        }
+
+        .tape-yellow {
+            background-color: var(--amarillo-tape);
+            color: #61561c;
+        }
+
+        .tape-blue {
+            background-color: var(--azul-tape);
+            color: #2b4661;
+            transform: translateX(-50%) rotate(2deg);
+        }
+
+        .rot-izq-1 { transform: rotate(-2.5deg); }
+        .rot-izq-2 { transform: rotate(-4deg); }
+        .rot-der-1 { transform: rotate(3deg); }
+        .rot-der-2 { transform: rotate(1.5deg); }
+
+        .deco-star {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #bce3ff;
+            user-select: none;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 850px) {
+            .notebook-container::before, .binder-spine { display: none; }
+            .notebook-row { flex-direction: column; min-height: auto; }
+            .page-left, .page-right { width: 100%; justify-content: center; padding: 1.5rem 1rem; }
+            .video-card { width: 100%; max-width: 450px; transform: none !important; margin-bottom: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="notebook-container">
+        
+        <div class="binder-spine"></div>
+
+        <div class="collage-canvas">
+            
+            <div class="notebook-row">
+                <div class="page-left" style="align-items: flex-start; justify-content: flex-start; padding-left: 3rem;">
+                    <div class="brand-logo-staggered">
+                        <span class="word-limon">LIMON</span>
+                        <span class="word-arbol">ARBOL</span>
+                        <span class="word-portfolio">portafolio de Física y Simulación</span>
+                        <span class="word-portfolio">Carolina Becerra Macías</span>
+                    </div>
+                </div>
+                <div class="page-right">
+                    <div class="deco-star" style="top: 20%; left: 10%; font-size: 2.5rem;">✦</div>
+                </div>
+            </div>
+
+            <div class="notebook-row">
+                <div class="page-left">
+                    <a href="https://youtu.be/-JskxXPjqHs" target="_blank" class="video-card rot-izq-1">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/-JskxXPjqHs?autoplay=1&mute=1&loop=1&playlist=-JskxXPjqHs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 01</span><span>CBM</span></div>
+                        <div class="tape-label tape-yellow">Caída Libre</div>
+                    </a>
+                </div>
+                <div class="page-right">
+                                        <a href="https://youtu.be/AgxwZ4_pzEw" target="_blank" class="video-card rot-der-1">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/AgxwZ4_pzEw?autoplay=1&mute=1&loop=1&playlist=AgxwZ4_pzEw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                       </div>
+                            <div class="card-meta"><span>SIM 02</span><span>CBM</span></div>
+                        <div class="tape-label tape-blue">Plano Inclinado</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="notebook-row">
+                <div class="page-left">
+                    <a href="https://youtu.be/xrNYWxaRfRs" target="_blank" class="video-card rot-izq-2">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/xrNYWxaRfRs?autoplay=1&mute=1&loop=1&playlist=xrNYWxaRfRs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 03</span><span>CBM</span></div>
+                        <div class="tape-label tape-blue">Práctica Boliche</div>
+                    </a>
+                </div>
+                <div class="page-right">
+                    <a href="https://youtu.be/_F_IALLsmO8" target="_blank" class="video-card rot-der-2">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/_F_IALLsmO8?autoplay=1&mute=1&loop=1&playlist=_F_IALLsmO8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 04</span><span>CBM</span></div>
+                        <div class="tape-label tape-yellow">Constraints</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="notebook-row">
+                <div class="page-left">
+                    <a href="https://youtu.be/WZtjdZ9kHTc" target="_blank" class="video-card rot-izq-1">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/WZtjdZ9kHTc?autoplay=1&mute=1&loop=1&playlist=WZtjdZ9kHTc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 05</span><span>CBM</span></div>
+                        <div class="tape-label tape-yellow">Partículas</div>
+                    </a>
+                </div>
+                <div class="page-right">
+                    <a href="https://youtu.be/vMWPYX2nGlo" target="_blank" class="video-card rot-der-1">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/vMWPYX2nGlo?autoplay=1&mute=1&loop=1&playlist=vMWPYX2nGlo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 06</span><span>CBM</span></div>
+                        <div class="tape-label tape-blue">Cell Fracture</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="notebook-row">
+                <div class="page-left">
+                    <a href="https://youtu.be/ad2XnUtwiBE" target="_blank" class="video-card rot-izq-2">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/ad2XnUtwiBE?autoplay=1&mute=1&loop=1&playlist=ad2XnUtwiBE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 07</span><span>CBM</span></div>
+                        <div class="tape-label tape-blue">Tela Cloth Bandera</div>
+                    </a>
+                </div>
+                <div class="page-right">
+                    <a href="https://youtu.be/j5fJUZTQYd0" target="_blank" class="video-card rot-der-2">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/j5fJUZTQYd0?autoplay=1&mute=1&loop=1&playlist=j5fJUZTQYd0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 08</span><span>CBM</span></div>
+                        <div class="tape-label tape-yellow">Develación Auto</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="notebook-row">
+                <div class="page-left">
+                    <a href="https://youtu.be/4CYJlXF2Q88" target="_blank" class="video-card rot-izq-1">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/4CYJlXF2Q88?autoplay=1&mute=1&loop=1&playlist=4CYJlXF2Q88" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 09</span><span>CBM</span></div>
+                        <div class="tape-label tape-yellow">Partículas Turbulencia</div>
+                    </a>
+                </div>
+                <div class="page-right">
+                    <a href="https://youtu.be/vQb202Coqmo" target="_blank" class="video-card rot-der-1">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/vQb202Coqmo?autoplay=1&mute=1&loop=1&playlist=vQb202Coqmo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 10</span><span>CBM</span></div>
+                        <div class="tape-label tape-blue">Práctica Fuego</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="notebook-row">
+                <div class="page-left">
+                    <a href="https://youtu.be/2dAFh6gu4-0" target="_blank" class="video-card rot-izq-2">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/2dAFh6gu4-0?autoplay=1&mute=1&loop=1&playlist=2dAFh6gu4-0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 11</span><span>CBM</span></div>
+                        <div class="tape-label tape-blue">Práctica Fluidos</div>
+                    </a>
+                </div>
+                <div class="page-right">
+                    <a href="https://youtu.be/gjn6yqxh12s" target="_blank" class="video-card rot-der-2">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/gjn6yqxh12s?autoplay=1&mute=1&loop=1&playlist=gjn6yqxh12s" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 12</span><span>CBM</span></div>
+                        <div class="tape-label tape-yellow">Lata con Fluidos</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="notebook-row">
+                <div class="page-left">
+                    <a href="https://youtu.be/a44C6AwXkVQ" target="_blank" class="video-card rot-izq-1">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/a44C6AwXkVQ?autoplay=1&mute=1&loop=1&playlist=a44C6AwXkVQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 13</span><span>CBM</span></div>
+                        <div class="tape-label tape-yellow">Práctica Columpio</div>
+                    </a>
+                </div>
+                <div class="page-right">
+                    <a href="https://youtu.be/rS6vVGbpURM" target="_blank" class="video-card rot-der-1">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/rS6vVGbpURM?autoplay=1&mute=1&loop=1&playlist=rS6vVGbpURM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 14</span><span>CBM</span></div>
+                        <div class="tape-label tape-blue">Práctica Demolición</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="notebook-row">
+                <div class="page-left">
+                    <div class="deco-star" style="bottom: 20%; right: 20%;">✦</div>
+                </div>
+                <div class="page-right">
+                    <a href="https://youtu.be/CkpxQTGemIc" target="_blank" class="video-card rot-der-2">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/CkpxQTGemIc?autoplay=1&mute=1&loop=1&playlist=CkpxQTGemIc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-meta"><span>SIM 15</span><span>CBM</span></div>
+                        <div class="tape-label tape-blue">Práctica Soft Body</div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
